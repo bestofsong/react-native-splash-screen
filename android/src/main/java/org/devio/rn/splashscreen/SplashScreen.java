@@ -2,6 +2,11 @@ package org.devio.rn.splashscreen;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import java.lang.ref.WeakReference;
 
@@ -21,7 +26,9 @@ public class SplashScreen {
      * 打开启动屏
      */
     public static void show(final Activity activity, final boolean fullScreen) {
-        if (activity == null) return;
+        if (activity == null) {
+            return;
+        }
         mActivity = new WeakReference<Activity>(activity);
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -29,7 +36,12 @@ public class SplashScreen {
                 if (!activity.isFinishing()) {
 
                     mSplashDialog = new Dialog(activity, fullScreen ? R.style.SplashScreen_Fullscreen : R.style.SplashScreen_SplashTheme);
-                    mSplashDialog.setContentView(R.layout.launch_screen);
+                    View view  = LayoutInflater.from(activity).inflate(R.layout.launch_screen,null);
+                    String channelName = getChannelName(activity);
+                    if("_360".equals(channelName)){
+                        view.findViewById(R.id.shoufa_id).setVisibility(View.VISIBLE);
+                    }
+                    mSplashDialog.setContentView(view);
                     mSplashDialog.setCancelable(false);
 
                     if (!mSplashDialog.isShowing()) {
@@ -57,7 +69,9 @@ public class SplashScreen {
             }
             activity = mActivity.get();
         }
-        if (activity == null) return;
+        if (activity == null) {
+            return;
+        }
 
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -68,5 +82,30 @@ public class SplashScreen {
                 }
             }
         });
+    }
+
+    /**
+     * 获取渠道名
+     * @param context
+     * @return
+     */
+    public static String getChannelName(Context context)  {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            if (packageManager != null) {
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(
+                        context.getPackageName(), PackageManager.GET_META_DATA);
+                if (applicationInfo != null) {
+                    if (applicationInfo.metaData != null) {
+                        String resultData = applicationInfo.metaData.getString("UMENG_CHANNEL");
+                        return resultData;
+                    }
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 }

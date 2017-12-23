@@ -3,4 +3,7 @@
     <item type="layout" name="launch_screen">
         @layout/launch_screen
     </item>
+    <item type="id" name="shoufa_id">
+        @id/shoufa_id
+    </item>
 </resources>
