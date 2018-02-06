@@ -37,10 +37,10 @@ public class SplashScreen {
 
                     mSplashDialog = new Dialog(activity, fullScreen ? R.style.SplashScreen_Fullscreen : R.style.SplashScreen_SplashTheme);
                     View view  = LayoutInflater.from(activity).inflate(R.layout.launch_screen,null);
-                    String channelName = getChannelName(activity);
-                    if("_360".equals(channelName)){
-                        view.findViewById(R.id.shoufa_id).setVisibility(View.VISIBLE);
-                    }
+                    // String channelName = getChannelName(activity);
+                    // if("_360".equals(channelName)){
+                    //     view.findViewById(R.id.shoufa_id).setVisibility(View.VISIBLE);
+                    // }
                     mSplashDialog.setContentView(view);
                     mSplashDialog.setCancelable(false);
 
